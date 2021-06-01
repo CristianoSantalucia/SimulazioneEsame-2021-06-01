@@ -33,6 +33,6 @@ public class Vicino implements Comparable<Vicino>
 	
 	@Override public int compareTo(Vicino v2)
 	{
-		return - (int) (this.peso - v2.getPeso());
+		return - Double.compare(this.peso, v2.getPeso());
 	} 
 }
