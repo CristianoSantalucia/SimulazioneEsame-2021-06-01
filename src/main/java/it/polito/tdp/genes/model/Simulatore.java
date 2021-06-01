@@ -1,9 +1,13 @@
 package it.polito.tdp.genes.model;
 
+import java.time.Duration;
+import java.time.Month;
 import java.time.YearMonth;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Set;
 
@@ -16,10 +20,10 @@ import it.polito.tdp.genes.model.Evento.tipoEvento;
 public class Simulatore
 {
 	private Model model;
-	Graph<Genes, DefaultWeightedEdge> grafo; 
-	
-	private Genes precedente = null;
-	
+	Graph<Genes, DefaultWeightedEdge> grafo;
+
+	private DefaultWeightedEdge precedente = null;
+
 	private int numIng;
 	private List<Ingegnere> ingegneri;
 	private PriorityQueue<Evento> eventi;
@@ -32,9 +36,9 @@ public class Simulatore
 		this.eventi = new PriorityQueue<>();
 		this.ingegneri = new ArrayList<>();
 		this.numIng = numIng;
-		
-		Genes gPartenza = partenza;
 
+		Genes gPartenza = partenza; 
+		
 		for (int i = 1; i <= numIng; i++)
 		{
 			Ingegnere ing = new Ingegnere(i, gPartenza);
@@ -63,26 +67,22 @@ public class Simulatore
 
 	private void processEvent(Evento evento)
 	{
+		Evento e = null;
 		switch (evento.getTipo())
-		{
+		{ 
 			case NUOVO_MESE:
 				int prob = (int) (Math.random() * 100);
 				if (prob <= 30)
 				{
-					Evento e = new Evento(evento.getAnno(), evento.getIng(), tipoEvento.CONTINUA);
+					e = new Evento(evento.getAnno(), evento.getIng(), tipoEvento.CONTINUA);
 					this.eventi.add(e);
 				}
 				else
 				{
-					Evento e = new Evento(evento.getAnno(), evento.getIng(), tipoEvento.CAMBIA);
+					evento.getIng().setLavoraA(nuovoLavoro(evento.getIng()));
+					e = new Evento(evento.getAnno(), evento.getIng(), tipoEvento.CAMBIA);
 					this.eventi.add(e);
 				}
-				break; 		
-			case CAMBIA: 
-				evento.getIng().setLavoraA(nuovoLavoro(evento.getIng()));
-				
-			case CONTINUA:
-				
 				break;
 			default:
 				break;
@@ -92,22 +92,26 @@ public class Simulatore
 	private Genes nuovoLavoro(Ingegnere ing)
 	{
 		Set<DefaultWeightedEdge> archi = this.grafo.edgesOf(ing.getLavoraA());
-		Double best = 0.0; 
+		Double best = 0.0;
 		DefaultWeightedEdge bestEdge = null;
 		Double terminator = 0.0;
 		for (DefaultWeightedEdge e : archi)
 		{
 			terminator += this.grafo.getEdgeWeight(e);
 		}
-		for(DefaultWeightedEdge e : archi)
+		Double random =  Math.random(); 
+		Map<DefaultWeightedEdge, Double> mappa = new HashMap<>();
+		for (DefaultWeightedEdge e : archi)
 		{
-			Double res = ( this.grafo.getEdgeWeight(e) / terminator ); 
-			if(res > best)
-			{
-				best = res;
-				bestEdge = e; 
-			}
+			Double res = (this.grafo.getEdgeWeight(e) / terminator); //prob 
+			mappa.put(e, res); 
 		}
+		for (DefaultWeightedEdge e : mappa.keySet())
+		{
+			
+		}
+		
+		
 		return Graphs.getOppositeVertex(this.grafo, bestEdge, ing.getLavoraA());
 	}
 }
