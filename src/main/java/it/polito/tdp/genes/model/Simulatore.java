@@ -1,5 +1,6 @@
 package it.polito.tdp.genes.model;
 
+import java.nio.charset.CodingErrorAction;
 import java.time.Duration;
 import java.time.Month;
 import java.time.YearMonth;
@@ -14,6 +15,8 @@ import java.util.Set;
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultWeightedEdge;
+
+import com.sun.marlin.DMarlinRenderingEngine;
 
 import it.polito.tdp.genes.model.Evento.tipoEvento;
 
@@ -37,8 +40,8 @@ public class Simulatore
 		this.ingegneri = new ArrayList<>();
 		this.numIng = numIng;
 
-		Genes gPartenza = partenza; 
-		
+		Genes gPartenza = partenza;
+
 		for (int i = 1; i <= numIng; i++)
 		{
 			Ingegnere ing = new Ingegnere(i, gPartenza);
@@ -63,13 +66,30 @@ public class Simulatore
 			System.out.println(e);
 			processEvent(e);
 		}
-	}
 
+		Map<Genes, Integer> numeri = new HashMap<>();
+		for (Genes g : this.grafo.vertexSet())
+		{
+			int num = 0;
+			for (Ingegnere i : this.ingegneri)
+			{
+				if (g.equals(i.getLavoraA()))
+				{
+					num++;
+				}
+			}
+			if (num > 0)
+				numeri.put(g, num);
+		}
+
+		System.out.println("RESULT: " + numeri);
+	}
+	 
 	private void processEvent(Evento evento)
 	{
 		Evento e = null;
 		switch (evento.getTipo())
-		{ 
+		{
 			case NUOVO_MESE:
 				int prob = (int) (Math.random() * 100);
 				if (prob <= 30)
@@ -92,26 +112,30 @@ public class Simulatore
 	private Genes nuovoLavoro(Ingegnere ing)
 	{
 		Set<DefaultWeightedEdge> archi = this.grafo.edgesOf(ing.getLavoraA());
-		Double best = 0.0;
 		DefaultWeightedEdge bestEdge = null;
 		Double terminator = 0.0;
 		for (DefaultWeightedEdge e : archi)
 		{
 			terminator += this.grafo.getEdgeWeight(e);
 		}
-		Double random =  Math.random(); 
 		Map<DefaultWeightedEdge, Double> mappa = new HashMap<>();
 		for (DefaultWeightedEdge e : archi)
 		{
-			Double res = (this.grafo.getEdgeWeight(e) / terminator); //prob 
-			mappa.put(e, res); 
+			Double res = (this.grafo.getEdgeWeight(e) / terminator) * 100;
+			mappa.put(e, res);
 		}
+		double bestDiff = 1000;
+		Double random = Math.random();
 		for (DefaultWeightedEdge e : mappa.keySet())
 		{
-			
+			double num1 = mappa.get(e);
+			double diff = Math.abs(num1 - random);
+			if (diff < bestDiff)
+			{
+				bestDiff = diff;
+				bestEdge = e;
+			}
 		}
-		
-		
 		return Graphs.getOppositeVertex(this.grafo, bestEdge, ing.getLavoraA());
 	}
 }
