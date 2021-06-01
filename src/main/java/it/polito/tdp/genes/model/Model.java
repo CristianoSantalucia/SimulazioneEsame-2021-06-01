@@ -21,10 +21,14 @@ public class Model
 	private GenesDao dao;
 	private Map<String, Genes> geni;
 	private Graph<Genes, DefaultWeightedEdge> grafo;
+	
+	//sim 
+	Simulatore theSims; 
 
 	public Model()
 	{
 		this.dao = new GenesDao();
+		this.theSims = new Simulatore(); 
 	}
 
 	public void creaGrafo()
@@ -83,5 +87,12 @@ public class Model
 		for (Vicino v : vicini)
 			s += "\n" + v.getGeni() + " PESO : " + v.getPeso();
 		return s;
+	}
+
+	//simulazione
+	public void init(Genes base, int numIng)
+	{
+		this.theSims.init(base, numIng);
+		this.theSims.simula(); 
 	}
 }

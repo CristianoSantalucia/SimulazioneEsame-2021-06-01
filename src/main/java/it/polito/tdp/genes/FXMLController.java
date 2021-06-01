@@ -54,10 +54,13 @@ public class FXMLController
 					+ this.model.getNumArchi());
 
 			this.cmbGeni.getItems().addAll(this.model.getVertici());
+			
+			btnGeniAdiacenti.setDisable(false);
+			btnSimula.setDisable(false);
 		}
 		catch (Exception e)
 		{
-			this.txtResult.appendText("ERRORE GENERAZIONE GRAFO");
+			this.txtResult.appendText("\nERRORE GENERAZIONE GRAFO");
 			return;
 		}
 	}
@@ -73,14 +76,28 @@ public class FXMLController
 		}
 		else
 		{
-			this.txtResult.appendText("ERRORE SCELTA GENE");
+			this.txtResult.appendText("\nERRORE SCELTA GENE");
 			return;
 		}
 	}
 
 	@FXML void doSimula(ActionEvent event)
 	{
-
+		Integer numIng = null; 
+		try
+		{
+			numIng = Integer.parseInt(this.txtIng.getText()); 
+		}
+		catch (Exception e)
+		{
+			this.txtResult.appendText("\nERRORE");
+			return; 
+		}
+		Genes base = this.cmbGeni.getValue();
+		if (base != null && numIng != null)
+		{
+			this.model.init(base, numIng);
+		}
 	}
 
 	@FXML // This method is called by the FXMLLoader when initialization is complete
