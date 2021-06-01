@@ -58,7 +58,7 @@ public class Simulatore
 		}
 	}
 
-	public void simula()
+	public String simula()
 	{
 		while (!this.eventi.isEmpty())
 		{
@@ -66,7 +66,7 @@ public class Simulatore
 			System.out.println(e);
 			processEvent(e);
 		}
-
+		//stampa
 		Map<Genes, Integer> numeri = new HashMap<>();
 		for (Genes g : this.grafo.vertexSet())
 		{
@@ -82,7 +82,7 @@ public class Simulatore
 				numeri.put(g, num);
 		}
 
-		System.out.println("RESULT: " + numeri);
+		return "RESULT: " + numeri;
 	}
 	 
 	private void processEvent(Evento evento)

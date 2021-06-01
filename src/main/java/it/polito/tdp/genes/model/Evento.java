@@ -12,7 +12,6 @@ public class Evento implements Comparable<Evento>
 	
 	public Evento(YearMonth anno, Ingegnere ing, tipoEvento tipo)
 	{
-		super();
 		this.anno = anno;
 		this.ing = ing;
 		this.tipo = tipo;

@@ -94,9 +94,9 @@ public class FXMLController
 			return; 
 		}
 		Genes base = this.cmbGeni.getValue();
-		if (base != null && numIng != null)
+		if (base != null && numIng != null && numIng > 0)
 		{
-			this.model.init(base, numIng);
+			this.txtResult.appendText("\n" + this.model.sim(base, numIng));
 		}
 	}
 

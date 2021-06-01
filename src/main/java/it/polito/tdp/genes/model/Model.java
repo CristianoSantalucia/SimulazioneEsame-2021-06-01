@@ -100,9 +100,9 @@ public class Model
 	}
 
 	// simulazione
-	public void init(Genes base, int numIng)
+	public String sim(Genes base, int numIng)
 	{
 		this.theSims.init(grafo, base, numIng);
-		this.theSims.simula();
-	}
+		return this.theSims.simula();
+	} 
 }
