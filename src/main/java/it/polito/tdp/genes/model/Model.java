@@ -21,14 +21,14 @@ public class Model
 	private GenesDao dao;
 	private Map<String, Genes> geni;
 	private Graph<Genes, DefaultWeightedEdge> grafo;
-	
-	//sim 
-	Simulatore theSims; 
+
+	// sim
+	Simulatore theSims;
 
 	public Model()
 	{
 		this.dao = new GenesDao();
-		this.theSims = new Simulatore(); 
+		this.theSims = new Simulatore();
 	}
 
 	public void creaGrafo()
@@ -73,6 +73,16 @@ public class Model
 		return this.grafo.vertexSet();
 	}
 
+	public Graph<Genes, DefaultWeightedEdge> getGrafo()
+	{
+		return this.grafo;
+	}
+
+	public List<Genes> getAdiacenti(Genes g)
+	{
+		return Graphs.neighborListOf(this.grafo, g);
+	}
+
 	public String getVicini(Genes source)
 	{
 		List<Genes> geniVicini = Graphs.neighborListOf(this.grafo, source);
@@ -89,10 +99,10 @@ public class Model
 		return s;
 	}
 
-	//simulazione
+	// simulazione
 	public void init(Genes base, int numIng)
 	{
-		this.theSims.init(base, numIng);
-		this.theSims.simula(); 
+		this.theSims.init(grafo, base, numIng);
+		this.theSims.simula();
 	}
 }

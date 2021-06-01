@@ -9,6 +9,7 @@ public class Evento implements Comparable<Evento>
 	private YearMonth anno; 
 	private Ingegnere ing; 
 	private tipoEvento tipo;
+	
 	public Evento(YearMonth anno, Ingegnere ing, tipoEvento tipo)
 	{
 		super();
