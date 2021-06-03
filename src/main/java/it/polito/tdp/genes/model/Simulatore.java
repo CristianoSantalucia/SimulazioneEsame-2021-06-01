@@ -88,6 +88,7 @@ public class Simulatore
 	private void processEvent(Evento evento)
 	{
 		Evento e = null;
+		
 		switch (evento.getTipo())
 		{
 			case NUOVO_MESE:
